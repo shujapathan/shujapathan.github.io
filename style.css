@@ -1,0 +1,76 @@
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    background:#f5f5f5;
+}
+
+header{
+    background:#0b7d32;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+.buttons{
+    margin-top:15px;
+}
+
+.buttons a{
+    text-decoration:none;
+    padding:10px 20px;
+    border-radius:6px;
+    margin:5px;
+    color:white;
+    display:inline-block;
+}
+
+.call-btn{
+    background:#1565c0;
+}
+
+.wa-btn{
+    background:#25D366;
+}
+
+.legend{
+    text-align:center;
+    margin:15px;
+    font-weight:bold;
+}
+
+.table-container{
+    overflow-x:auto;
+    padding:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#0b7d32;
+    color:white;
+}
+
+th, td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+.available-cell{
+    background:#d4edda;
+}
+
+.booked-cell{
+    background:#f8d7da;
+}
+
+@media(max-width:768px){
+    th,td{
+        font-size:12px;
+        padding:6px;
+    }
+}
