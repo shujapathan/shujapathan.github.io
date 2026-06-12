@@ -1,66 +1,98 @@
-const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSAipwcbilCrIQhJIhrYH0qyKJKvGgzj2Go-WjaTO3fUZIc1dLaL46mLQovdNM-jYduib_z-ZRZ3DUH/pub?gid=0&single=true&output=csv";
+const csvUrl =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTznPwMCDQUfnvxg0gWlbMgaR5RnoR14DfPA343riMLSq4sRNrp-LbO9S9AiotDfRfvffT-zP2J2WPF/pub?output=csv";
 
 fetch(csvUrl)
-.then(response => response.text())
+.then(res => res.text())
 .then(csv => {
 
     const rows = csv.split("\n").slice(1);
 
-    const data = {};
+    const weekData = {};
+    const dates = [];
 
     rows.forEach(row => {
 
         const cols = row.split(",");
 
-        if(cols.length < 3) return;
+        if(cols.length < 4) return;
 
-        const day = cols[0].trim();
-        const time = cols[1].trim();
-        const status = cols[2].trim();
+        const date = cols[0].trim();
+        const day = cols[1].trim();
+        const time = cols[2].trim();
+        const status = cols[3].trim();
 
-        if(!data[time]){
-            data[time] = {};
+        if(!dates.includes(date) && dates.length < 7){
+            dates.push(date);
         }
 
-        data[time][day] = status;
+        if(!weekData[time]){
+            weekData[time] = {};
+        }
+
+        weekData[time][date] = {
+            day,
+            status
+        };
     });
 
-    const tbody = document.querySelector("#scheduleTable tbody");
+    const tableHead =
+    document.getElementById("tableHead");
 
-    const days = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-    ];
+    let header =
+    "<tr><th>Time</th>";
 
-    Object.keys(data).forEach(time => {
+    dates.forEach(date => {
 
-        const tr = document.createElement("tr");
+        const sample =
+        Object.values(weekData)[0][date];
 
-        let row = `<td>${time}</td>`;
+        header += `
+        <th>
+            ${sample.day.substring(0,3)}
+            <br>
+            ${date}
+        </th>`;
+    });
 
-        days.forEach(day => {
+    header += "</tr>";
 
-            const status = data[time][day] || "";
+    tableHead.innerHTML = header;
 
-            if(status.toLowerCase() === "available"){
-                row += `<td class="available-cell">🟢</td>`;
+    const tbody =
+    document.querySelector("#scheduleTable tbody");
+
+    tbody.innerHTML = "";
+
+    Object.keys(weekData).forEach(time => {
+
+        let row =
+        `<tr><td>${time}</td>`;
+
+        dates.forEach(date => {
+
+            const slot =
+            weekData[time][date];
+
+            if(!slot){
+                row += "<td>-</td>";
             }
-            else if(status.toLowerCase() === "booked"){
-                row += `<td class="booked-cell">🔴</td>`;
+            else if(
+            slot.status.toLowerCase()
+            === "available"){
+
+                row +=
+                `<td class="available-cell">🟢</td>`;
             }
             else{
-                row += `<td>-</td>`;
+
+                row +=
+                `<td class="booked-cell">🔴</td>`;
             }
         });
 
-        tr.innerHTML = row;
-        tbody.appendChild(tr);
+        row += "</tr>";
 
+        tbody.innerHTML += row;
     });
 
 });
