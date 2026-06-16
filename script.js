@@ -9,7 +9,7 @@ fetch(csvUrl)
 .then(res => res.text())
 .then(csv => {
 
-    const rows = csv.split("\n").slice(1);
+    const rows = csv.trim().split("\n").slice(1);
 
     rows.forEach(row => {
 
@@ -42,14 +42,14 @@ fetch(csvUrl)
     const today = new Date();
     today.setHours(0,0,0,0);
 
-    currentWeekStart =
-        allDates.findIndex(date => {
+    currentWeekStart = allDates.findIndex(date => {
 
-            const d = new Date(date);
-            d.setHours(0,0,0,0);
+        const d = new Date(date);
+        d.setHours(0,0,0,0);
 
-            return d >= today;
-        });
+        return d >= today;
+
+    });
 
     if(currentWeekStart < 0){
         currentWeekStart = 0;
@@ -57,30 +57,38 @@ fetch(csvUrl)
 
     renderWeek();
 
-    document
-        .getElementById("nextWeek")
-        .addEventListener("click", () => {
+    const nextBtn = document.getElementById("nextWeek");
+    const prevBtn = document.getElementById("prevWeek");
+
+    if(nextBtn){
+        nextBtn.addEventListener("click", () => {
 
             if(currentWeekStart + 7 < allDates.length){
 
                 currentWeekStart += 7;
                 renderWeek();
+
             }
 
         });
+    }
 
-    document
-        .getElementById("prevWeek")
-        .addEventListener("click", () => {
+    if(prevBtn){
+        prevBtn.addEventListener("click", () => {
 
             if(currentWeekStart - 7 >= 0){
 
                 currentWeekStart -= 7;
                 renderWeek();
+
             }
 
         });
+    }
 
+})
+.catch(error => {
+    console.error("Error loading CSV:", error);
 });
 
 function renderWeek(){
@@ -104,22 +112,35 @@ function renderWeek(){
         for(const time in weekData){
 
             if(weekData[time][date]){
+
                 sample =
                     weekData[time][date];
+
                 break;
             }
-
         }
 
         if(sample){
 
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            const currentDate =
+                new Date(date);
+
+            currentDate.setHours(0,0,0,0);
+
+            const dayLabel =
+                currentDate.getTime() === today.getTime()
+                ? "Today"
+                : sample.day.substring(0,3);
+
             header += `
             <th>
-                ${sample.day.substring(0,3)}
+                ${dayLabel}
                 <br>
                 ${date}
             </th>`;
-
         }
 
     });
@@ -151,8 +172,7 @@ function renderWeek(){
 
             }
             else if(
-                slot.status
-                .toLowerCase()
+                slot.status.toLowerCase()
                 === "available"
             ){
 
@@ -174,3 +194,5 @@ function renderWeek(){
         tbody.innerHTML += row;
 
     });
+
+}
