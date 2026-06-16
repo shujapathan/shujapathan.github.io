@@ -1,5 +1,5 @@
 const csvUrl =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vTznPwMCDQUfnvxg0gWlbMgaR5RnoR14DfPA343riMLSq4sRNrp-LbO9S9AiotDfRfvffT-zP2J2WPF/pub?output=csv";
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTznPwMCDQUfnvxg0gWlbMgaR5RnoR14DfPA343riMLSq4sRNrp-LbO9S9AiotDfRfvffT-zP2J2WPF/pubhtml";
 
 let currentWeekStart = 0;
 let allDates = [];
