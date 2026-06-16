@@ -8,22 +8,37 @@ fetch(csvUrl)
     const rows = csv.split("\n").slice(1);
 
     const weekData = {};
-    const dates = [];
+    const allDates = [];
 
-    rows.forEach(row => {
+rows.forEach(row => {
 
-        const cols = row.split(",");
+    const cols = row.split(",");
 
-        if(cols.length < 4) return;
+    if(cols.length < 4) return;
 
-        const date = cols[0].trim();
-        const day = cols[1].trim();
-        const time = cols[2].trim();
-        const status = cols[3].trim();
+    const date = cols[0].trim();
 
-        if(!dates.includes(date) && dates.length < 7){
-            dates.push(date);
-        }
+    if(!allDates.includes(date)){
+        allDates.push(date);
+    }
+});
+
+allDates.sort((a,b) =>
+new Date(a) - new Date(b));
+
+const today = new Date();
+
+today.setHours(0,0,0,0);
+
+const dates = allDates.filter(date => {
+
+    const d = new Date(date);
+
+    d.setHours(0,0,0,0);
+
+    return d >= today;
+
+}).slice(0,7);
 
         if(!weekData[time]){
             weekData[time] = {};
