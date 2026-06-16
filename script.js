@@ -174,7 +174,8 @@ function renderWeek(){
             else if(
                 slot.status.toLowerCase()
                 === "available"
-            ){
+            )
+            {
 
                 row +=
                 `<td class="available-cell">🟢</td>`;
